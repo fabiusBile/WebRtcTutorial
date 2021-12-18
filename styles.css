@@ -1,0 +1,36 @@
+body{
+    display: flex;
+    justify-content: center;
+    background: lavender;
+}
+
+.container{
+    width: 1080px;
+    max-width: 100%;
+    background: whitesmoke;
+    padding: 20px;
+}
+
+textarea{
+    width: 100%;
+    max-width: 100%;
+    resize: none;
+    height: 5em;
+}
+
+textarea:read-only{
+    background: rgb(161, 161, 161);
+    color: black;
+}
+
+button{
+    display: block;
+}
+
+video{
+    width: 100%;
+}
+
+.hidden{
+    display: none;
+}
