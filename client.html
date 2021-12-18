@@ -16,6 +16,8 @@
         <br>
         <p><strong>Offer token input</strong></p>
         <textarea id="offerInput" placeholder="Paste offer token here"></textarea>
+        Choose offer token file
+        <input type="file" name="Upload offer token" class="token-upload" id="offerInputFile" data-input-id="offerInput" data-button-id="createAnswer"/>
         <br>
         <p>
             <button id="createAnswer" disabled>Create answer token</button>
@@ -28,6 +30,7 @@
                 Copy it and send to the host
             </p>
             <pre><textarea id="answer" class="token-output" readonly></textarea></pre>
+            <a href = "#" id="downloadAnswer">Download answer token</a>
         </div>
     </div>
     <script src="common.js"></script>

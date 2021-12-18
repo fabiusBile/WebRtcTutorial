@@ -6,6 +6,7 @@ const offerText = document.querySelector("#offer");
 const answerInput = document.querySelector("#answerInput");
 const startBroadcast = document.querySelector("#handleAnswer");
 const offerBlock = document.querySelector("#offerBlock");
+const downloadOffer = document.querySelector("#downloadOffer");
 
 bindTextAreaToButton(answerInput, startBroadcast);
 
@@ -50,7 +51,9 @@ createOfferBtn.addEventListener("click", () => {
     connection = createConnection(() => {
         const offer = connection.localDescription;
         console.log(offer);
-        offerText.innerText = objectToB64(offer);
+        const offerString = objectToB64(offer);
+        offerText.innerText = offerString;
+        makeDownloadLink(downloadOffer, "offer", offerString);
         offerBlock.classList.remove("hidden");
     });
 

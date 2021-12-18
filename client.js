@@ -4,6 +4,7 @@ const offerInput = document.querySelector("#offerInput");
 const createAnswerBtn = document.querySelector("#createAnswer");
 const answerText = document.querySelector("#answer");
 const answerBlock = document.querySelector("#answerBlock");
+const downloadAnswer = document.querySelector("#downloadAnswer");
 
 let dataChannel;
 
@@ -21,7 +22,9 @@ createAnswerBtn.addEventListener("click", () => {
     connection = createConnection(() => {
         const answer = connection.localDescription;
         console.log(answer);
-        answerText.innerText = objectToB64(answer);
+        const answerString = objectToB64(answer);
+        answerText.innerText = answerString;
+        makeDownloadLink(downloadAnswer, "answer", answerString);
         answerBlock.classList.remove("hidden");
     });
 

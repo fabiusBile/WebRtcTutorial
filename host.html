@@ -26,9 +26,12 @@
                 Copy it and send to the client
             </p>
             <pre><textarea readonly id="offer" class="token-output"></textarea></pre>
+            <a href = "#" id="downloadOffer">Download offer token</a>
 
             <p><strong>Answer token input</strong></p>
             <textarea id="answerInput" placeholder="Paste answer token here"></textarea>
+            Choose answer token file
+            <input type="file" name="Upload answer token" class="token-upload" id="answerInputFile" data-input-id="answerInput" data-button-id="handleAnswer"/>
             <br>
             <p><button id="handleAnswer" disabled>Start broadcast</button></p>
         </div>

@@ -1,5 +1,6 @@
 const serverUrl = "stun:stun.l.google.com:19302";
 const tokenOutputs = document.querySelectorAll(".token-output");
+const tokenUploads = document.querySelectorAll(".token-upload");
 
 tokenOutputs.forEach((t) => {
     t.addEventListener("click", () => {
@@ -8,13 +9,29 @@ tokenOutputs.forEach((t) => {
     })
 })
 
+tokenUploads.forEach((t) => {
+    t.addEventListener('change', () => {
+        var fr = new FileReader();
+        fr.onload = function () {
+            const input = document.getElementById(t.dataset.inputId);
+            const button = document.getElementById(t.dataset.buttonId);
+            const text = fr.result;
+            input.value = text;
+            if (button != null){
+                toggleInputIfEventNotNull(text, button);
+            }
+        }
 
-function objectToB64(obj){
+        fr.readAsText(t.files[0]);
+    });
+});
+
+function objectToB64(obj) {
     const string = JSON.stringify(obj);
     return btoa(string);
 }
 
-function b64ToObject(b64){
+function b64ToObject(b64) {
     const string = atob(b64);
     return JSON.parse(string);
 }
@@ -63,15 +80,20 @@ function handledatachannel(event) {
     };
 }
 
-function toggleInputIfEventNotNull(event, field){
-    if (event.target.value){
+function toggleInputIfEventNotNull(value, field) {
+    if (value) {
         field.disabled = false;
     } else {
         field.disabled = true;
     }
 }
 
-function bindTextAreaToButton(textArea, button){
-    textArea.addEventListener("change", (event) => toggleInputIfEventNotNull(event, button));
-    textArea.addEventListener("keyup", (event) => toggleInputIfEventNotNull(event, button));
+function bindTextAreaToButton(textArea, button) {
+    textArea.addEventListener("change", (event) => toggleInputIfEventNotNull(event.target.value, button));
+    textArea.addEventListener("keyup", (event) => toggleInputIfEventNotNull(event.target.value, button));
+}
+
+function makeDownloadLink(element, filename, body) {
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(body));
+    element.setAttribute('download', `${new Date().toLocaleString()} ${filename}`);
 }
