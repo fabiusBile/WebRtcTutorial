@@ -19,7 +19,7 @@ createAnswerBtn.addEventListener("click", () => {
     }
     const offer =  b64ToObject(offerInput.value);
 
-    connection = createConnection(() => {
+    let connection = createConnection(() => {
         const answer = connection.localDescription;
         console.log(answer);
         const answerString = objectToB64(answer);

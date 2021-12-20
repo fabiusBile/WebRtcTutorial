@@ -10,7 +10,6 @@ const downloadOffer = document.querySelector("#downloadOffer");
 
 bindTextAreaToButton(answerInput, startBroadcast);
 
-let connection;
 let stream;
 
 leftVideo.oncanplay = maybeCreateStream;
@@ -48,7 +47,7 @@ createDataChannel = (connection) => {
 }
 
 createOfferBtn.addEventListener("click", () => {
-    connection = createConnection(() => {
+    createConnection(() => {
         const offer = connection.localDescription;
         console.log(offer);
         const offerString = objectToB64(offer);
@@ -64,8 +63,10 @@ createOfferBtn.addEventListener("click", () => {
         offerToReceiveVideo: 1
     };
 
+    try{
     stream.getTracks().forEach(track => connection.addTrack(track, stream));
-
+    } catch(e){}
+    
     connection.createOffer(offerOptions).then(
         (offer) => {
             connection.setLocalDescription(offer);
