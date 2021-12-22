@@ -1,31 +1,28 @@
 const rightVideo = document.querySelector("#rightVideo")
-const offerInput = document.querySelector("#offerInput");
-
-const createAnswerBtn = document.querySelector("#createAnswer");
-const answerText = document.querySelector("#answer");
-const answerBlock = document.querySelector("#answerBlock");
-const downloadAnswer = document.querySelector("#downloadAnswer");
-
 let dataChannel;
 
-bindTextAreaToButton(offerInput, createAnswerBtn);
+const enterRoomBtn = document.querySelector("#connectToRoom");
+const roomIdField = document.querySelector("#roomId");
+let roomId;
 
-createAnswerBtn.addEventListener("click", () => {
+connectCentrifugo(() => {});
 
-    const offerString = offerInput.value;
-    if (offerString == null) {
-        alert("Input offer!");
-        return;
-    }
-    const offer =  b64ToObject(offerInput.value);
+enterRoomBtn.addEventListener("click", () => {
+    roomId = roomIdField.value.trim();
+    centrifuge.subscribe(`channel-client-${roomId}`, function(message) {
+        connect(message.data);
+    })
+});
 
+function connect(offer){
     let connection = createConnection(() => {
         const answer = connection.localDescription;
-        console.log(answer);
-        const answerString = objectToB64(answer);
-        answerText.innerText = answerString;
-        makeDownloadLink(downloadAnswer, "answer", answerString);
-        answerBlock.classList.remove("hidden");
+
+        centrifuge.publish(`channel-host-${roomId}`, answer).then(function(res) {
+            console.log('successfully published');
+        }, function(err) {
+            console.log('publish error', err);
+        });
     });
 
     connection.ontrack = (event) =>{
@@ -40,10 +37,9 @@ createAnswerBtn.addEventListener("click", () => {
         connection.createAnswer().then(
             (answer) => {
                 connection.setLocalDescription(answer);
-                console.log(answer);
             },
             (error) => {
                 console.error(error);
             })
     });
-});
+}

@@ -15,27 +15,16 @@
             <p>This browser does not support the video element.</p>
         </video>
         <br>
+        <p class="center">
+            RoomId
+            <br>
+            <strong id="roomId"></strong>
+        </p>
         <p>
-            <button id="createOffer">Create offer token</button>
+            <button id="startBroadcast">Start broadcast</button>
         </p>
 
-        <div id="offerBlock" class="hidden">
-            <p>
-                <strong>Offer token</strong>
-                <br>
-                Copy it and send to the client
-            </p>
-            <pre><textarea readonly id="offer" class="token-output"></textarea></pre>
-            <a href = "#" id="downloadOffer">Download offer token</a>
-
-            <p><strong>Answer token input</strong></p>
-            <textarea id="answerInput" placeholder="Paste answer token here"></textarea>
-            Choose answer token file
-            <input type="file" name="Upload answer token" class="token-upload" id="answerInputFile" data-input-id="answerInput" data-button-id="handleAnswer"/>
-            <br>
-            <p><button id="handleAnswer" disabled>Start broadcast</button></p>
-        </div>
-
+        <script src="https://cdn.jsdelivr.net/gh/centrifugal/centrifuge-js@2.X.X/dist/centrifuge.min.js"></script>
         <script src="common.js"></script>
         <script src="host.js"></script>
     </div>

@@ -1,23 +1,24 @@
 const leftVideo = document.querySelector("#leftVideo")
 
-const createOfferBtn = document.querySelector("#createOffer");
-const offerText = document.querySelector("#offer");
-
-const answerInput = document.querySelector("#answerInput");
-const startBroadcast = document.querySelector("#handleAnswer");
-const offerBlock = document.querySelector("#offerBlock");
-const downloadOffer = document.querySelector("#downloadOffer");
-
-bindTextAreaToButton(answerInput, startBroadcast);
-
+const startBroadcast = document.querySelector("#startBroadcast");
 let stream;
+const roomId = uuidv4();
+document.querySelector("#roomId").innerText = roomId;
 
 leftVideo.oncanplay = maybeCreateStream;
-if (leftVideo.readyState >= 3) { // HAVE_FUTURE_DATA
+if (leftVideo.readyState >= 3) {
     maybeCreateStream();
 }
 
-function maybeCreateStream () {
+connectCentrifugo(() => {
+    centrifuge.s
+    centrifuge.subscribe(`channel-host-${roomId}`, function (message) {
+        console.log(message);
+        handleAnswer(message.data);
+    })
+});
+
+function maybeCreateStream() {
     if (stream) {
         return;
     }
@@ -46,14 +47,14 @@ createDataChannel = (connection) => {
     };
 }
 
-createOfferBtn.addEventListener("click", () => {
+startBroadcast.addEventListener("click", () => {
     createConnection(() => {
         const offer = connection.localDescription;
-        console.log(offer);
-        const offerString = objectToB64(offer);
-        offerText.innerText = offerString;
-        makeDownloadLink(downloadOffer, "offer", offerString);
-        offerBlock.classList.remove("hidden");
+        centrifuge.publish(`channel-client-${roomId}`, offer).then(function (res) {
+            console.log('successfully published');
+        }, function (err) {
+            console.log('publish error', err);
+        });
     });
 
     createDataChannel(connection);
@@ -63,10 +64,12 @@ createOfferBtn.addEventListener("click", () => {
         offerToReceiveVideo: 1
     };
 
-    try{
-    stream.getTracks().forEach(track => connection.addTrack(track, stream));
-    } catch(e){}
-    
+    try {
+        stream.getTracks().forEach(track => connection.addTrack(track, stream));
+    } catch (e) {
+        console.error(e);
+    }
+
     connection.createOffer(offerOptions).then(
         (offer) => {
             connection.setLocalDescription(offer);
@@ -77,19 +80,18 @@ createOfferBtn.addEventListener("click", () => {
         });
 });
 
-startBroadcast.addEventListener("click", () => {
-    const answerString = answerInput.value;
-    if (answerString == null) {
-        alert("Input answer!");
-        return;
-    }
-    const answer = b64ToObject(answerString);
+function handleAnswer(answer) {
     connection.setRemoteDescription(new RTCSessionDescription(answer)).then(
         (e) => {
-            console.log("connection succeeded!")
+            console.log("connection succeeded!");
             leftVideo.play();
-            console.log(e)
         }, (error) => {
             console.error(error);
         });
-});
+}
+
+function uuidv4() {
+    return crypto.randomUUID ? crypto.randomUUID() : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
