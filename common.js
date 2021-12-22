@@ -2,7 +2,8 @@ const tokenOutputs = document.querySelectorAll(".token-output");
 const tokenUploads = document.querySelectorAll(".token-upload");
 let connection; 
 
-const centrifuge = new Centrifuge('ws://test-centrifugo-fab.herokuapp.com/connection/websocket');
+const wsProtocol= window.location.protocol === 'https:' ? 'wss' : 'ws';
+const centrifuge = new Centrifuge(`${wsProtocol}://test-centrifugo-fab.herokuapp.com/connection/websocket`);
 
 tokenOutputs.forEach((t) => {
     t.addEventListener("click", () => {
